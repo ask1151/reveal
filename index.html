@@ -1,181 +1,176 @@
 <!DOCTYPE html>
-<html lang="ja">
+<html>
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Baby Reveal</title>
 
 <style>
 body{
-margin:0;
-height:100vh;
-display:flex;
-justify-content:center;
-align-items:center;
-flex-direction:column;
-font-family:sans-serif;
-background:#fffaf5;
-overflow:hidden;
-text-align:center;
+  margin:0;
+  background:#fffafc;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  height:100vh;
+  overflow:hidden;
+  font-family:sans-serif;
 }
 
-#cake{
-font-size:120px;
-cursor:pointer;
-position:relative;
-user-select:none;
-transition:0.2s;
+.container{
+  position:relative;
+  width:90vw;
+  max-width:420px;
 }
 
-.crack{
-position:absolute;
-top:10%;
-left:50%;
-transform:translateX(-50%);
-font-size:90px;
-pointer-events:none;
-opacity:0;
-transition:0.3s;
+.cake{
+  width:100%;
+  transition:0.2s;
 }
 
+/* 震え */
 .shake{
-animation:shake 0.25s;
+  animation:shake 0.4s;
 }
 
 @keyframes shake{
-0%{transform:translateX(0)}
-25%{transform:translateX(-6px)}
-50%{transform:translateX(6px)}
-75%{transform:translateX(-4px)}
-100%{transform:translateX(0)}
+  0%{transform:translateX(0);}
+  25%{transform:translateX(-4px);}
+  50%{transform:translateX(4px);}
+  75%{transform:translateX(-4px);}
+  100%{transform:translateX(0);}
 }
 
-.split-left{
-transform:translateX(-140px) rotate(-15deg);
-opacity:0;
-transition:1s;
-}
-
-.split-right{
-transform:translateX(140px) rotate(15deg);
-opacity:0;
-transition:1s;
-}
-
-#result{
-font-size:42px;
-opacity:0;
-transition:1s;
-font-weight:bold;
-margin-top:20px;
-}
-
-.float{
-position:fixed;
-bottom:-40px;
-font-size:26px;
-animation:floatUp linear forwards;
+/* キラキラ */
+.sparkle{
+  position:absolute;
+  font-size:20px;
+  animation:floatUp 1.5s linear forwards;
 }
 
 @keyframes floatUp{
-to{
-transform:translateY(-120vh);
-opacity:0;
+  from{opacity:1; transform:translateY(0);}
+  to{opacity:0; transform:translateY(-120px);}
 }
+
+/* 性別表示 */
+.result{
+  position:absolute;
+  top:45%;
+  left:50%;
+  transform:translate(-50%,-50%);
+  font-size:42px;
+  font-weight:bold;
+  opacity:0;
+  transition:0.6s;
+}
+
+.show{
+  opacity:1;
+}
+
+/* ハート泡 */
+.float{
+  position:absolute;
+  animation:bubble 4s linear forwards;
+}
+
+@keyframes bubble{
+  from{
+    transform:translateY(0);
+    opacity:1;
+  }
+  to{
+    transform:translateY(-600px);
+    opacity:0;
+  }
 }
 </style>
 </head>
 
 <body>
 
-<h2>🎂 ケーキを5回タップしてね 🎂</h2>
+<div class="container" onclick="tapCake()">
 
-<div id="cake">
-🎂
-<div id="crack" class="crack">│</div>
+<img src="cake.png" class="cake" id="cake">
+
+<div id="result" class="result"></div>
+
 </div>
 
-<div id="result"></div>
-
 <script>
+let tapCount = 0;
 
-/* 性別変更ここだけ */
-const gender="girl"; // boy or girl
+/* 性別設定（ここだけ変更） */
+const gender = "GIRL"; // BOY に変えればOK
 
-const cake=document.getElementById("cake");
-const crack=document.getElementById("crack");
-const result=document.getElementById("result");
+function tapCake(){
 
-let tap=0;
+  tapCount++;
 
-cake.addEventListener("click",()=>{
+  const cake = document.getElementById("cake");
 
-tap++;
+  /* 震え */
+  cake.classList.add("shake");
+  setTimeout(()=>cake.classList.remove("shake"),400);
 
-cake.classList.add("shake");
-setTimeout(()=>cake.classList.remove("shake"),250);
+  sparkleEffect();
 
-if(tap===1){
-crack.style.opacity=1;
-crack.textContent="│";
+  if(tapCount === 3){
+      revealGender();
+  }
 }
 
-if(tap===2){
-crack.textContent="┃";
+function sparkleEffect(){
+  const container=document.querySelector(".container");
+
+  for(let i=0;i<8;i++){
+    const s=document.createElement("div");
+    s.className="sparkle";
+    s.innerHTML="✨";
+
+    s.style.left=Math.random()*100+"%";
+    s.style.top="60%";
+
+    container.appendChild(s);
+
+    setTimeout(()=>s.remove(),1500);
+  }
 }
 
-if(tap===3){
-crack.textContent="╿";
+function revealGender(){
+
+  const result=document.getElementById("result");
+
+  if(gender==="GIRL"){
+    result.innerHTML="GIRL 🩷";
+    result.style.color="#ff6fa5";
+  }else{
+    result.innerHTML="BOY 💙";
+    result.style.color="#6fa8ff";
+  }
+
+  result.classList.add("show");
+
+  floatingHearts();
 }
 
-if(tap===4){
-cake.style.transform="scale(1.05)";
+function floatingHearts(){
+  const container=document.querySelector(".container");
+
+  for(let i=0;i<20;i++){
+    const f=document.createElement("div");
+    f.className="float";
+    f.innerHTML=Math.random()>0.5?"💖":"🫧";
+
+    f.style.left=Math.random()*100+"%";
+    f.style.top="70%";
+    f.style.fontSize=(20+Math.random()*20)+"px";
+
+    container.appendChild(f);
+
+    setTimeout(()=>f.remove(),4000);
+  }
 }
-
-if(tap===5){
-reveal();
-}
-
-});
-
-function reveal(){
-
-cake.innerHTML="🍰 🍰";
-
-const parts=cake.children;
-
-setTimeout(()=>{
-parts[0].classList.add("split-left");
-parts[1].classList.add("split-right");
-},50);
-
-if(gender==="boy"){
-document.body.style.background="#d8ecff";
-result.textContent="💙 Boy 💙";
-spawn("💙","🫧");
-}else{
-document.body.style.background="#ffdbe6";
-result.textContent="💗 Girl 💗";
-spawn("💗","🫧");
-}
-
-result.style.opacity=1;
-}
-
-function spawn(a,b){
-for(let i=0;i<45;i++){
-setTimeout(()=>{
-const el=document.createElement("div");
-el.className="float";
-el.textContent=Math.random()>0.5?a:b;
-el.style.left=Math.random()*100+"vw";
-el.style.animationDuration=(Math.random()*3+4)+"s";
-document.body.appendChild(el);
-setTimeout(()=>el.remove(),7000);
-},i*120);
-}
-}
-
 </script>
 
 </body>
