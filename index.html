@@ -15,6 +15,7 @@ background:#fffaf5;
 overflow:hidden;
 }
 
+/* ステージ中央 */
 #stage{
 position:relative;
 width:80%;
@@ -23,6 +24,7 @@ aspect-ratio:1/1;
 cursor:pointer;
 }
 
+/* 画像中央固定 */
 #cake,
 #resultImg{
 width:100%;
@@ -104,6 +106,7 @@ animation:bubbleUp linear forwards;
 
 <script>
 
+const stage=document.getElementById("stage");
 const cake=document.getElementById("cake");
 const result=document.getElementById("resultImg");
 const music=document.getElementById("music");
@@ -117,6 +120,7 @@ tap++;
 cake.classList.add("shake");
 setTimeout(()=>cake.classList.remove("shake"),400);
 
+/* 毎回キラキラ */
 sparkleBurst();
 
 if(tap===3){
@@ -125,7 +129,7 @@ reveal();
 
 });
 
-/* ✨自然なキラキラ */
+/* ✨ランダムキラキラ */
 function sparkleBurst(){
 
 for(let i=0;i<22;i++){
@@ -148,7 +152,7 @@ setTimeout(()=>s.remove(),3500);
 }
 }
 
-/* 🫧自然なシャボン玉 */
+/* 🫧シャボン玉 */
 function bubbleBurst(){
 
 for(let i=0;i<30;i++){
@@ -173,25 +177,26 @@ setTimeout(()=>b.remove(),10000);
 }
 }
 
-/* 🎉 発表（ため演出追加） */
+/* 🎉 発表演出 */
 function reveal(){
 
-sparkleBurst();
-
-/* 少しためる ←ここが重要 */
-setTimeout(()=>{
-
+/* ⭐音楽は即スタート */
 music.currentTime=0;
 music.play();
 
-/* ゆっくり変身 */
+/* 期待感キラキラ */
+sparkleBurst();
+
+/* ⭐3秒待ってから変身 */
+setTimeout(()=>{
+
 cake.style.opacity="0";
 result.style.opacity="1";
 
 bubbleBurst();
 sparkleBurst();
 
-},800);
+},3000);
 
 }
 
