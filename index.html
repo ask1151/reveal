@@ -1,176 +1,137 @@
 <!DOCTYPE html>
-<html>
+<html lang="ja">
 <head>
-<meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <style>
+
 body{
-  margin:0;
-  background:#fffafc;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  height:100vh;
-  overflow:hidden;
-  font-family:sans-serif;
+margin:0;
+height:100vh;
+display:flex;
+justify-content:center;
+align-items:center;
+flex-direction:column;
+background:#fffaf5;
+overflow:hidden;
 }
 
-.container{
-  position:relative;
-  width:90vw;
-  max-width:420px;
+#cake{
+width:80%;
+max-width:350px;
+cursor:pointer;
+transition:0.2s;
 }
 
-.cake{
-  width:100%;
-  transition:0.2s;
-}
-
-/* 震え */
 .shake{
-  animation:shake 0.4s;
+animation:shake 0.4s;
 }
 
 @keyframes shake{
-  0%{transform:translateX(0);}
-  25%{transform:translateX(-4px);}
-  50%{transform:translateX(4px);}
-  75%{transform:translateX(-4px);}
-  100%{transform:translateX(0);}
+0%{transform:translateX(0)}
+25%{transform:translateX(-6px)}
+50%{transform:translateX(6px)}
+75%{transform:translateX(-4px)}
+100%{transform:translateX(0)}
 }
 
 /* キラキラ */
 .sparkle{
-  position:absolute;
-  font-size:20px;
-  animation:floatUp 1.5s linear forwards;
+position:fixed;
+font-size:22px;
+animation:float 2s linear forwards;
 }
 
-@keyframes floatUp{
-  from{opacity:1; transform:translateY(0);}
-  to{opacity:0; transform:translateY(-120px);}
+@keyframes float{
+to{
+transform:translateY(-200px);
+opacity:0;
+}
 }
 
-/* 性別表示 */
-.result{
-  position:absolute;
-  top:45%;
-  left:50%;
-  transform:translate(-50%,-50%);
-  font-size:42px;
-  font-weight:bold;
-  opacity:0;
-  transition:0.6s;
+/* 性別表示（じんわり） */
+#result{
+position:absolute;
+top:45%;
+opacity:0;
+transition:opacity 2.5s ease;
+}
+
+#result img{
+width:220px;
 }
 
 .show{
-  opacity:1;
+opacity:1;
 }
 
-/* ハート泡 */
-.float{
-  position:absolute;
-  animation:bubble 4s linear forwards;
-}
-
-@keyframes bubble{
-  from{
-    transform:translateY(0);
-    opacity:1;
-  }
-  to{
-    transform:translateY(-600px);
-    opacity:0;
-  }
-}
 </style>
 </head>
 
 <body>
 
-<div class="container" onclick="tapCake()">
+<img src="cake.png" id="cake">
 
-<img src="cake.png" class="cake" id="cake">
+<div id="result"></div>
 
-<div id="result" class="result"></div>
-
-</div>
+<audio id="music" src="music.mp3"></audio>
 
 <script>
-let tapCount = 0;
 
-/* 性別設定（ここだけ変更） */
-const gender = "GIRL"; // BOY に変えればOK
+const gender="girl"; // ← boy に変えるだけ
 
-function tapCake(){
+const cake=document.getElementById("cake");
+const result=document.getElementById("result");
+const music=document.getElementById("music");
 
-  tapCount++;
+let tap=0;
 
-  const cake = document.getElementById("cake");
+cake.addEventListener("click",()=>{
 
-  /* 震え */
-  cake.classList.add("shake");
-  setTimeout(()=>cake.classList.remove("shake"),400);
+tap++;
 
-  sparkleEffect();
+cake.classList.add("shake");
+setTimeout(()=>cake.classList.remove("shake"),400);
 
-  if(tapCount === 3){
-      revealGender();
-  }
+sparkles();
+
+if(tap===3){
+reveal();
 }
 
-function sparkleEffect(){
-  const container=document.querySelector(".container");
+});
 
-  for(let i=0;i<8;i++){
-    const s=document.createElement("div");
-    s.className="sparkle";
-    s.innerHTML="✨";
-
-    s.style.left=Math.random()*100+"%";
-    s.style.top="60%";
-
-    container.appendChild(s);
-
-    setTimeout(()=>s.remove(),1500);
-  }
+function sparkles(){
+for(let i=0;i<10;i++){
+const s=document.createElement("div");
+s.className="sparkle";
+s.textContent="✨";
+s.style.left=Math.random()*100+"vw";
+s.style.top="60%";
+document.body.appendChild(s);
+setTimeout(()=>s.remove(),2000);
+}
 }
 
-function revealGender(){
+function reveal(){
 
-  const result=document.getElementById("result");
-
-  if(gender==="GIRL"){
-    result.innerHTML="GIRL 🩷";
-    result.style.color="#ff6fa5";
-  }else{
-    result.innerHTML="BOY 💙";
-    result.style.color="#6fa8ff";
-  }
-
-  result.classList.add("show");
-
-  floatingHearts();
+/* 性別画像セット */
+if(gender==="boy"){
+result.innerHTML='<img src="boy.png">';
+}else{
+result.innerHTML='<img src="girl.png">';
 }
 
-function floatingHearts(){
-  const container=document.querySelector(".container");
+/* 音楽再生 */
+music.currentTime=0;
+music.play();
 
-  for(let i=0;i<20;i++){
-    const f=document.createElement("div");
-    f.className="float";
-    f.innerHTML=Math.random()>0.5?"💖":"🫧";
+/* じんわり表示 */
+setTimeout(()=>{
+result.classList.add("show");
+},200);
 
-    f.style.left=Math.random()*100+"%";
-    f.style.top="70%";
-    f.style.fontSize=(20+Math.random()*20)+"px";
-
-    container.appendChild(f);
-
-    setTimeout(()=>f.remove(),4000);
-  }
 }
+
 </script>
 
 </body>
