@@ -15,54 +15,79 @@ background:#fffaf5;
 overflow:hidden;
 }
 
-/* 画像エリア */
 #stage{
 position:relative;
 width:80%;
 max-width:360px;
 aspect-ratio:1/1;
-margin:auto;
+cursor:pointer;
 }
 
-/* ケーキ */
-#cake{
-width:100%;
-position:absolute;
-transition:opacity 2s ease;
-}
-
-/* 性別画像 */
+#cake,
 #resultImg{
 width:100%;
 position:absolute;
+top:50%;
+left:50%;
+transform:translate(-50%,-50%);
+}
+
+#cake{
+transition:opacity 2.8s ease;
+}
+
+#resultImg{
 opacity:0;
-transition:opacity 3s ease;
+transition:opacity 4s ease;
 }
 
-/* キラキラ */
-.sparkle{
-position:fixed;
-font-size:22px;
-animation:float 2s linear forwards;
-}
-
-@keyframes float{
-to{
-transform:translateY(-200px);
-opacity:0;
-}
-}
-
+/* 揺れ */
 .shake{
 animation:shake 0.4s;
 }
 
 @keyframes shake{
-0%{transform:translateX(0)}
-25%{transform:translateX(-6px)}
-50%{transform:translateX(6px)}
-75%{transform:translateX(-4px)}
-100%{transform:translateX(0)}
+0%{transform:translate(-50%,-50%)}
+25%{transform:translate(-50%,-50%) translateX(-6px)}
+50%{transform:translate(-50%,-50%) translateX(6px)}
+75%{transform:translate(-50%,-50%) translateX(-4px)}
+100%{transform:translate(-50%,-50%)}
+}
+
+/* ✨キラキラ */
+.sparkle{
+position:fixed;
+pointer-events:none;
+animation:sparkleFloat linear forwards;
+}
+
+@keyframes sparkleFloat{
+0%{
+transform:translateY(0) scale(0.4);
+opacity:0;
+}
+20%{opacity:1;}
+100%{
+transform:translateY(-300px) scale(1.3);
+opacity:0;
+}
+}
+
+/* 🫧シャボン玉 */
+.bubble{
+position:fixed;
+border-radius:50%;
+background:radial-gradient(circle at 30% 30%,
+rgba(255,255,255,0.9),
+rgba(255,255,255,0.15));
+pointer-events:none;
+animation:bubbleUp linear forwards;
+}
+
+@keyframes bubbleUp{
+0%{transform:translateY(0);opacity:0;}
+20%{opacity:1;}
+100%{transform:translateY(-130vh);opacity:0;}
 }
 
 </style>
@@ -71,10 +96,8 @@ animation:shake 0.4s;
 <body>
 
 <div id="stage">
-
 <img src="cake.png" id="cake">
 <img src="girl.png" id="resultImg">
-
 </div>
 
 <audio id="music" src="music.mp3"></audio>
@@ -87,14 +110,14 @@ const music=document.getElementById("music");
 
 let tap=0;
 
-document.getElementById("stage").addEventListener("click",()=>{
+stage.addEventListener("click",()=>{
 
 tap++;
 
 cake.classList.add("shake");
 setTimeout(()=>cake.classList.remove("shake"),400);
 
-sparkle();
+sparkleBurst();
 
 if(tap===3){
 reveal();
@@ -102,26 +125,73 @@ reveal();
 
 });
 
-function sparkle(){
-for(let i=0;i<10;i++){
+/* ✨自然なキラキラ */
+function sparkleBurst(){
+
+for(let i=0;i<22;i++){
+
+setTimeout(()=>{
+
 const s=document.createElement("div");
 s.className="sparkle";
-s.textContent="✨";
+s.textContent=Math.random()>0.5?"✨":"⭐";
+
 s.style.left=Math.random()*100+"vw";
-s.style.top="60%";
+s.style.top=(Math.random()*80+10)+"vh";
+s.style.fontSize=(Math.random()*20+12)+"px";
+s.style.animationDuration=(Math.random()*2+1.5)+"s";
+
 document.body.appendChild(s);
-setTimeout(()=>s.remove(),2000);
+setTimeout(()=>s.remove(),3500);
+
+},i*70);
 }
 }
 
+/* 🫧自然なシャボン玉 */
+function bubbleBurst(){
+
+for(let i=0;i<30;i++){
+
+setTimeout(()=>{
+
+const b=document.createElement("div");
+b.className="bubble";
+
+const size=Math.random()*50+15;
+
+b.style.width=size+"px";
+b.style.height=size+"px";
+b.style.left=Math.random()*100+"vw";
+b.style.bottom="-80px";
+b.style.animationDuration=(Math.random()*5+6)+"s";
+
+document.body.appendChild(b);
+setTimeout(()=>b.remove(),10000);
+
+},i*120);
+}
+}
+
+/* 🎉 発表（ため演出追加） */
 function reveal(){
+
+sparkleBurst();
+
+/* 少しためる ←ここが重要 */
+setTimeout(()=>{
 
 music.currentTime=0;
 music.play();
 
-/* ゆっくり切替 */
+/* ゆっくり変身 */
 cake.style.opacity="0";
 result.style.opacity="1";
+
+bubbleBurst();
+sparkleBurst();
+
+},800);
 
 }
 
