@@ -2,6 +2,7 @@
 <html lang="ja">
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <style>
 
 body{
@@ -10,28 +11,30 @@ height:100vh;
 display:flex;
 justify-content:center;
 align-items:center;
-flex-direction:column;
 background:#fffaf5;
 overflow:hidden;
 }
 
-#cake{
+/* 画像エリア */
+#stage{
+position:relative;
 width:80%;
-max-width:350px;
-cursor:pointer;
-transition:0.2s;
+max-width:360px;
 }
 
-.shake{
-animation:shake 0.4s;
+/* ケーキ */
+#cake{
+width:100%;
+position:absolute;
+transition:opacity 2s ease;
 }
 
-@keyframes shake{
-0%{transform:translateX(0)}
-25%{transform:translateX(-6px)}
-50%{transform:translateX(6px)}
-75%{transform:translateX(-4px)}
-100%{transform:translateX(0)}
+/* 性別画像 */
+#resultImg{
+width:100%;
+position:absolute;
+opacity:0;
+transition:opacity 3s ease;
 }
 
 /* キラキラ */
@@ -48,20 +51,16 @@ opacity:0;
 }
 }
 
-/* 性別表示（じんわり） */
-#result{
-position:absolute;
-top:45%;
-opacity:0;
-transition:opacity 2.5s ease;
+.shake{
+animation:shake 0.4s;
 }
 
-#result img{
-width:220px;
-}
-
-.show{
-opacity:1;
+@keyframes shake{
+0%{transform:translateX(0)}
+25%{transform:translateX(-6px)}
+50%{transform:translateX(6px)}
+75%{transform:translateX(-4px)}
+100%{transform:translateX(0)}
 }
 
 </style>
@@ -69,30 +68,31 @@ opacity:1;
 
 <body>
 
-<img src="cake.png" id="cake">
+<div id="stage">
 
-<div id="result"></div>
+<img src="cake.png" id="cake">
+<img src="girl.png" id="resultImg">
+
+</div>
 
 <audio id="music" src="music.mp3"></audio>
 
 <script>
 
-const gender="girl"; // ← boy に変えるだけ
-
 const cake=document.getElementById("cake");
-const result=document.getElementById("result");
+const result=document.getElementById("resultImg");
 const music=document.getElementById("music");
 
 let tap=0;
 
-cake.addEventListener("click",()=>{
+document.getElementById("stage").addEventListener("click",()=>{
 
 tap++;
 
 cake.classList.add("shake");
 setTimeout(()=>cake.classList.remove("shake"),400);
 
-sparkles();
+sparkle();
 
 if(tap===3){
 reveal();
@@ -100,7 +100,7 @@ reveal();
 
 });
 
-function sparkles(){
+function sparkle(){
 for(let i=0;i<10;i++){
 const s=document.createElement("div");
 s.className="sparkle";
@@ -114,21 +114,12 @@ setTimeout(()=>s.remove(),2000);
 
 function reveal(){
 
-/* 性別画像セット */
-if(gender==="boy"){
-result.innerHTML='<img src="boy.png">';
-}else{
-result.innerHTML='<img src="girl.png">';
-}
-
-/* 音楽再生 */
 music.currentTime=0;
 music.play();
 
-/* じんわり表示 */
-setTimeout(()=>{
-result.classList.add("show");
-},200);
+/* ゆっくり切替 */
+cake.style.opacity="0";
+result.style.opacity="1";
 
 }
 
