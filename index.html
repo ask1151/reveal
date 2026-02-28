@@ -3,149 +3,177 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Baby Reveal Cake</title>
+<title>Baby Reveal</title>
 
 <style>
 body{
-  margin:0;
-  height:100vh;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  flex-direction:column;
-  font-family:sans-serif;
-  background:#fffaf5;
-  text-align:center;
-  overflow:hidden;
-}
-
-h1{
-  color:#666;
+margin:0;
+height:100vh;
+display:flex;
+justify-content:center;
+align-items:center;
+flex-direction:column;
+font-family:sans-serif;
+background:#fffaf5;
+overflow:hidden;
+text-align:center;
 }
 
 #cake{
-  font-size:120px;
-  cursor:pointer;
-  transition:0.3s;
+font-size:120px;
+cursor:pointer;
+position:relative;
+user-select:none;
+transition:0.2s;
 }
 
-#cake:active{
-  transform:scale(0.9);
+.crack{
+position:absolute;
+top:10%;
+left:50%;
+transform:translateX(-50%);
+font-size:90px;
+pointer-events:none;
+opacity:0;
+transition:0.3s;
 }
 
-#count{
-  font-size:50px;
-  margin-top:20px;
-  font-weight:bold;
+.shake{
+animation:shake 0.25s;
+}
+
+@keyframes shake{
+0%{transform:translateX(0)}
+25%{transform:translateX(-6px)}
+50%{transform:translateX(6px)}
+75%{transform:translateX(-4px)}
+100%{transform:translateX(0)}
+}
+
+.split-left{
+transform:translateX(-140px) rotate(-15deg);
+opacity:0;
+transition:1s;
+}
+
+.split-right{
+transform:translateX(140px) rotate(15deg);
+opacity:0;
+transition:1s;
 }
 
 #result{
-  font-size:42px;
-  opacity:0;
-  transition:1s;
-  font-weight:bold;
-  margin-top:20px;
+font-size:42px;
+opacity:0;
+transition:1s;
+font-weight:bold;
+margin-top:20px;
 }
 
-.particle{
-  position:fixed;
-  width:12px;
-  height:12px;
-  border-radius:50%;
-  top:50%;
-  left:50%;
-  animation:explode 1.2s forwards;
+.float{
+position:fixed;
+bottom:-40px;
+font-size:26px;
+animation:floatUp linear forwards;
 }
 
-@keyframes explode{
-  to{
-    transform:translate(var(--x),var(--y));
-    opacity:0;
-  }
+@keyframes floatUp{
+to{
+transform:translateY(-120vh);
+opacity:0;
+}
 }
 </style>
 </head>
 
 <body>
 
-<h1>🎂 ケーキをタップしてね 🎂</h1>
+<h2>🎂 ケーキを5回タップしてね 🎂</h2>
 
-<div id="cake">🎂</div>
-<div id="count"></div>
+<div id="cake">
+🎂
+<div id="crack" class="crack">│</div>
+</div>
+
 <div id="result"></div>
-
-<!-- 音楽（無料音源） -->
-<audio id="music">
-  <source src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_c8c8a73467.mp3?filename=beautiful-piano-ambient-113997.mp3">
-</audio>
 
 <script>
 
-/* ===== 性別変更ここだけ ===== */
-const gender="girl";
-/* =========================== */
+/* 性別変更ここだけ */
+const gender="girl"; // boy or girl
 
 const cake=document.getElementById("cake");
-const count=document.getElementById("count");
+const crack=document.getElementById("crack");
 const result=document.getElementById("result");
-const music=document.getElementById("music");
 
-cake.addEventListener("click",startReveal);
+let tap=0;
 
-function startReveal(){
+cake.addEventListener("click",()=>{
 
-  cake.style.pointerEvents="none";
-  music.play();
+tap++;
 
-  let time=10;
-  count.textContent=time;
+cake.classList.add("shake");
+setTimeout(()=>cake.classList.remove("shake"),250);
 
-  const timer=setInterval(()=>{
-    time--;
-    count.textContent=time;
-
-    if(time===0){
-      clearInterval(timer);
-      reveal();
-    }
-  },1000);
+if(tap===1){
+crack.style.opacity=1;
+crack.textContent="│";
 }
+
+if(tap===2){
+crack.textContent="┃";
+}
+
+if(tap===3){
+crack.textContent="╿";
+}
+
+if(tap===4){
+cake.style.transform="scale(1.05)";
+}
+
+if(tap===5){
+reveal();
+}
+
+});
 
 function reveal(){
 
-  cake.textContent="🍰";
+cake.innerHTML="🍰 🍰";
 
-  if(gender==="boy"){
-    document.body.style.background="#d8ecff";
-    result.textContent="💙 Boy 💙";
-    explode("#6bbcff");
-  }else{
-    document.body.style.background="#ffdbe6";
-    result.textContent="💗 Girl 💗";
-    explode("#ff8fb1");
-  }
+const parts=cake.children;
 
-  count.textContent="";
-  result.style.opacity=1;
+setTimeout(()=>{
+parts[0].classList.add("split-left");
+parts[1].classList.add("split-right");
+},50);
+
+if(gender==="boy"){
+document.body.style.background="#d8ecff";
+result.textContent="💙 Boy 💙";
+spawn("💙","🫧");
+}else{
+document.body.style.background="#ffdbe6";
+result.textContent="💗 Girl 💗";
+spawn("💗","🫧");
 }
 
-function explode(color){
+result.style.opacity=1;
+}
 
-  for(let i=0;i<70;i++){
-    const p=document.createElement("div");
-    p.className="particle";
-    p.style.background=color;
-
-    const x=(Math.random()-0.5)*700+"px";
-    const y=(Math.random()-0.5)*700+"px";
-
-    p.style.setProperty("--x",x);
-    p.style.setProperty("--y",y);
-
-    document.body.appendChild(p);
-
-    setTimeout(()=>p.remove(),1200);
-  }
+function spawn(a,b){
+for(let i=0;i<45;i++){
+setTimeout(()=>{
+const el=document.createElement("div");
+el.className="float";
+el.textContent=Math.random()>0.5?a:b;
+el.style.left=Math.random()*100+"vw";
+el.style.animationDuration=(Math.random()*3+4)+"s";
+document.body.appendChild(el);
+setTimeout(()=>el.remove(),7000);
+},i*120);
+}
 }
 
 </script>
