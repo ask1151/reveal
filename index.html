@@ -21,23 +21,23 @@ left:0;
 cursor:pointer;
 }
 
-/* 画像フルスクリーン */
+/* 画像フル画面 */
 #cake,
 #resultImg{
 position:absolute;
 width:100%;
 height:100%;
-object-fit:cover;
 top:0;
 left:0;
+object-fit:cover;
 }
 
-/* ケーキフェード */
+/* ケーキ */
 #cake{
 transition:opacity 2.8s ease;
 }
 
-/* 結果画像 */
+/* 結果 */
 #resultImg{
 opacity:0;
 transition:opacity 4s ease;
@@ -128,6 +128,7 @@ reveal();
 
 });
 
+/* ✨キラキラ */
 function sparkleBurst(){
 
 for(let i=0;i<22;i++){
@@ -150,6 +151,7 @@ setTimeout(()=>s.remove(),3500);
 }
 }
 
+/* 🫧シャボン玉 */
 function bubbleBurst(){
 
 for(let i=0;i<30;i++){
@@ -174,6 +176,7 @@ setTimeout(()=>b.remove(),10000);
 }
 }
 
+/* 🎉発表 */
 function reveal(){
 
 music.currentTime=0;
