@@ -18,23 +18,25 @@ overflow:hidden;
 /* ステージ中央 */
 #stage{
 position:relative;
-width:80%;
-max-width:360px;
-aspect-ratio:1/1;
+width:92vw;
+max-width:900px;
+aspect-ratio:3/2;
 cursor:pointer;
 }
 
 /* 画像中央固定 */
-#cake2,
+#cake,
 #resultImg{
 width:100%;
+height:100%;
+object-fit:contain;
 position:absolute;
 top:50%;
 left:50%;
 transform:translate(-50%,-50%);
 }
 
-#cake2{
+#cake{
 transition:opacity 2.8s ease;
 }
 
@@ -180,14 +182,11 @@ setTimeout(()=>b.remove(),10000);
 /* 🎉 発表演出 */
 function reveal(){
 
-/* ⭐音楽は即スタート */
 music.currentTime=0;
 music.play();
 
-/* 期待感キラキラ */
 sparkleBurst();
 
-/* ⭐3秒待ってから変身 */
 setTimeout(()=>{
 
 cake.style.opacity="0";
