@@ -39,7 +39,6 @@ html, body{
   z-index: 0;
 }
 
-/* ステージ（z-index削除） */
 #stage{
   position: fixed;
   top: 0;
@@ -53,7 +52,7 @@ html, body{
   touch-action: manipulation;
 }
 
-/* 画像は中間レイヤー */
+/* 画像 */
 #cake,
 #resultImg{
   position: absolute;
@@ -74,6 +73,31 @@ html, body{
   transition: opacity 4s ease;
 }
 
+/* ⭐ カウント表示（追加） */
+#count{
+  position: fixed;
+  top: 8%;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 48px;
+  color: #8b5e3c; /* 茶色 */
+  font-weight: bold;
+  font-family: "Hiragino Maru Gothic ProN", "Arial Rounded MT Bold", sans-serif;
+  opacity: 0;
+  z-index: 9999;
+  pointer-events: none;
+}
+
+.fadeOut{
+  animation: fadeOut 4s forwards;
+}
+
+@keyframes fadeOut{
+  from { opacity: 1; }
+  to   { opacity: 0; }
+}
+
+/* 既存アニメ */
 .shake{
   animation: shake 0.4s;
 }
@@ -86,7 +110,6 @@ html, body{
   100%{ transform: translateX(0) }
 }
 
-/* ⭐ 最前面に固定 */
 .sparkle{
   position: fixed;
   pointer-events: none;
@@ -129,6 +152,9 @@ html, body{
   <img src="girl3.png" id="resultImg">
 </div>
 
+<!-- ⭐ カウント表示 -->
+<div id="count"></div>
+
 <audio id="music" src="music.mp3"></audio>
 
 <script>
@@ -138,6 +164,7 @@ const cake   = document.getElementById("cake");
 const result = document.getElementById("resultImg");
 const music  = document.getElementById("music");
 const bg     = document.getElementById("bg");
+const count  = document.getElementById("count");
 
 let tap = 0;
 let lastTap = 0;
@@ -157,8 +184,26 @@ function handleTap(){
 
   sparkleBurst();
 
+  // ⭐ カウント表示
+  if(tap === 1){
+    showCount("3");
+  }
+  if(tap === 2){
+    showCount("2");
+  }
   if(tap === 3){
+    showCount("1", true);
     reveal();
+  }
+}
+
+function showCount(text, fade=false){
+  count.textContent = text;
+  count.style.opacity = "1";
+  count.classList.remove("fadeOut");
+
+  if(fade){
+    count.classList.add("fadeOut");
   }
 }
 
