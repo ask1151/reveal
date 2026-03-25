@@ -26,19 +26,15 @@ html, body{
   overscroll-behavior: none;
 }
 
-/* ✅ 背景：最初から画面いっぱい */
 #bg{
   position: fixed;
   top: 0;
   left: 0;
   width: 100vw;
   height: 100dvh;
-
   background: url("girl3-1.jpeg") center center / cover no-repeat;
-
   opacity: 0;
   transition: opacity 4s ease;
-
   z-index: 0;
 }
 
@@ -87,10 +83,12 @@ html, body{
   100%{ transform: translateX(0) }
 }
 
+/* ⭐ 前面に出す */
 .sparkle{
   position: fixed;
   pointer-events: none;
   animation: sparkleFloat linear forwards;
+  z-index: 999;
 }
 
 @keyframes sparkleFloat{
@@ -107,6 +105,7 @@ html, body{
     rgba(255,255,255,0.15));
   pointer-events: none;
   animation: bubbleUp linear forwards;
+  z-index: 999;
 }
 
 @keyframes bubbleUp{
@@ -202,7 +201,7 @@ function reveal(){
   setTimeout(() => {
     cake.style.opacity   = "0";
     result.style.opacity = "1";
-    bg.style.opacity     = "1"; // ✅ ここで同時フェード
+    bg.style.opacity     = "1";
 
     bubbleBurst();
     sparkleBurst();
