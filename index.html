@@ -24,18 +24,15 @@ html, body{
   background: #fffaf5;
   overflow: hidden;
   overscroll-behavior: none;
-  -webkit-overflow-scrolling: touch;
 }
 
 #stage{
   position: fixed;
   top: 0;
   left: 0;
-  right: 0;
-  bottom: 0;
-  width: 100%;
-  height: 100%;
-  padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+  width: 100vw;
+  height: 100vh;
+  height: 100dvh;
   cursor: pointer;
   touch-action: manipulation;
 }
@@ -43,12 +40,12 @@ html, body{
 #cake,
 #resultImg{
   position: absolute;
-  top: calc(-1 * env(safe-area-inset-top));
-  left: calc(-1 * env(safe-area-inset-left));
-  width: calc(100% + env(safe-area-inset-left) + env(safe-area-inset-right));
-  height: calc(100% + env(safe-area-inset-top) + env(safe-area-inset-bottom));
-  object-fit: cover;
-  object-position: center;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  object-position: center center;
 }
 
 #cake{
@@ -120,12 +117,12 @@ const result = document.getElementById("resultImg");
 const music  = document.getElementById("music");
 
 let tap = 0;
+let lastTap = 0;
 
 stage.addEventListener("touchend", handleTap, { passive: true });
 stage.addEventListener("click", handleTap);
 
-let lastTap = 0;
-function handleTap(e){
+function handleTap(){
   const now = Date.now();
   if(now - lastTap < 300) return;
   lastTap = now;
@@ -182,7 +179,7 @@ function reveal(){
   sparkleBurst();
 
   setTimeout(() => {
-    cake.style.opacity  = "0";
+    cake.style.opacity   = "0";
     result.style.opacity = "1";
     bubbleBurst();
     sparkleBurst();
