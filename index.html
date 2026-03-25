@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
@@ -24,32 +23,26 @@ html, body{
   height: 100%;
   background: #fffaf5;
   overflow: hidden;
-  /* iOSのバウンススクロール無効化 */
   overscroll-behavior: none;
   -webkit-overflow-scrolling: touch;
 }
 
-/* フルスクリーンステージ */
 #stage{
   position: fixed;
-  /* Safe Area（ノッチ・ホームバー）も含めて全画面 */
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
   width: 100%;
   height: 100%;
-  /* env()でSafe Area対応 */
   padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
   cursor: pointer;
   touch-action: manipulation;
 }
 
-/* 画像フル画面 */
 #cake,
 #resultImg{
   position: absolute;
-  /* Safe Areaを無視して端から端まで */
   top: calc(-1 * env(safe-area-inset-top));
   left: calc(-1 * env(safe-area-inset-left));
   width: calc(100% + env(safe-area-inset-left) + env(safe-area-inset-right));
@@ -58,18 +51,15 @@ html, body{
   object-position: center;
 }
 
-/* ケーキ */
 #cake{
   transition: opacity 2.8s ease;
 }
 
-/* 結果 */
 #resultImg{
   opacity: 0;
   transition: opacity 4s ease;
 }
 
-/* 揺れ */
 .shake{
   animation: shake 0.4s;
 }
@@ -82,7 +72,6 @@ html, body{
   100%{ transform: translateX(0) }
 }
 
-/* ✨キラキラ */
 .sparkle{
   position: fixed;
   pointer-events: none;
@@ -95,7 +84,6 @@ html, body{
   100%{ transform: translateY(-300px) scale(1.3); opacity: 0; }
 }
 
-/* 🫧シャボン玉 */
 .bubble{
   position: fixed;
   border-radius: 50%;
@@ -113,7 +101,6 @@ html, body{
 }
 
 </style>
-
 </head>
 
 <body>
@@ -134,13 +121,11 @@ const music  = document.getElementById("music");
 
 let tap = 0;
 
-// iOSではtouchendの方が反応が速い
 stage.addEventListener("touchend", handleTap, { passive: true });
 stage.addEventListener("click", handleTap);
 
 let lastTap = 0;
 function handleTap(e){
-  // touchendとclickの二重発火を防ぐ
   const now = Date.now();
   if(now - lastTap < 300) return;
   lastTap = now;
@@ -157,7 +142,6 @@ function handleTap(e){
   }
 }
 
-/* ✨キラキラ */
 function sparkleBurst(){
   for(let i = 0; i < 22; i++){
     setTimeout(() => {
@@ -174,7 +158,6 @@ function sparkleBurst(){
   }
 }
 
-/* 🫧シャボン玉 */
 function bubbleBurst(){
   for(let i = 0; i < 30; i++){
     setTimeout(() => {
@@ -192,10 +175,9 @@ function bubbleBurst(){
   }
 }
 
-/* 🎉発表 */
 function reveal(){
   music.currentTime = 0;
-  music.play().catch(() => {}); // iOSの自動再生ブロック対策
+  music.play().catch(() => {});
 
   sparkleBurst();
 
