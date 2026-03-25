@@ -26,16 +26,19 @@ html, body{
   overscroll-behavior: none;
 }
 
-/* 背景（←ここが差し替えポイント） */
+/* ✅ 背景：最初から画面いっぱい */
 #bg{
   position: fixed;
   top: 0;
   left: 0;
-  width: 100%;
-  height: 100%;
-  background: url("girl3-1.jpeg") center / cover no-repeat;
+  width: 100vw;
+  height: 100dvh;
+
+  background: url("girl3-1.jpeg") center center / cover no-repeat;
+
   opacity: 0;
   transition: opacity 4s ease;
+
   z-index: 0;
 }
 
@@ -199,7 +202,7 @@ function reveal(){
   setTimeout(() => {
     cake.style.opacity   = "0";
     result.style.opacity = "1";
-    bg.style.opacity     = "1"; // ←背景も同時にフェード
+    bg.style.opacity     = "1"; // ✅ ここで同時フェード
 
     bubbleBurst();
     sparkleBurst();
