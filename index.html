@@ -73,14 +73,14 @@ html, body{
   transition: opacity 4s ease;
 }
 
-/* ⭐ カウント表示（追加） */
+/* ⭐ カウント表示 */
 #count{
   position: fixed;
   top: 8%;
   left: 50%;
   transform: translateX(-50%);
   font-size: 48px;
-  color: #8b5e3c; /* 茶色 */
+  color: #8b5e3c;
   font-weight: bold;
   font-family: "Hiragino Maru Gothic ProN", "Arial Rounded MT Bold", sans-serif;
   opacity: 0;
@@ -95,6 +95,40 @@ html, body{
 @keyframes fadeOut{
   from { opacity: 1; }
   to   { opacity: 0; }
+}
+
+/* ⭐ タップ誘導UI */
+#tapGuide{
+  position: fixed;
+  right: 6%;
+  top: 45%;
+  transform: translateY(-50%);
+  text-align: center;
+  z-index: 9999;
+  pointer-events: none;
+}
+
+#finger{
+  font-size: 36px;
+  animation: floatFinger 1.6s ease-in-out infinite;
+}
+
+@keyframes floatFinger{
+  0%   { transform: translateY(0); }
+  50%  { transform: translateY(10px); }
+  100% { transform: translateY(0); }
+}
+
+#tapText{
+  margin-top: 6px;
+  font-size: 14px;
+  color: #8b5e3c;
+  animation: blink 2.5s ease-in-out infinite;
+}
+
+@keyframes blink{
+  0%,100% { opacity: 0.2; }
+  50%     { opacity: 1; }
 }
 
 /* 既存アニメ */
@@ -152,8 +186,14 @@ html, body{
   <img src="girl3.png" id="resultImg">
 </div>
 
-<!-- ⭐ カウント表示 -->
+<!-- カウント -->
 <div id="count"></div>
+
+<!-- ⭐ タップ誘導 -->
+<div id="tapGuide">
+  <div id="finger">👆</div>
+  <div id="tapText">タップしてね</div>
+</div>
 
 <audio id="music" src="music.mp3"></audio>
 
@@ -165,6 +205,7 @@ const result = document.getElementById("resultImg");
 const music  = document.getElementById("music");
 const bg     = document.getElementById("bg");
 const count  = document.getElementById("count");
+const guide  = document.getElementById("tapGuide");
 
 let tap = 0;
 let lastTap = 0;
@@ -184,7 +225,6 @@ function handleTap(){
 
   sparkleBurst();
 
-  // ⭐ カウント表示
   if(tap === 1){
     showCount("3");
   }
@@ -193,6 +233,11 @@ function handleTap(){
   }
   if(tap === 3){
     showCount("1", true);
+
+    // ⭐ 誘導UIを消す
+    guide.style.opacity = "0";
+    guide.style.transition = "opacity 0.6s ease";
+
     reveal();
   }
 }
