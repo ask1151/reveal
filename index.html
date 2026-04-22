@@ -73,7 +73,7 @@ html, body{
   transition: opacity 4s ease;
 }
 
-/* ⭐ カウント表示 */
+/* カウント表示 */
 #count{
   position: fixed;
   top: 8%;
@@ -97,26 +97,29 @@ html, body{
   to   { opacity: 0; }
 }
 
-/* ⭐ タップ誘導UI */
+/* ⭐ タップ誘導UI（位置調整） */
 #tapGuide{
   position: fixed;
-  right: 6%;
-  top: 45%;
+  right: 3%;   /* ←少し右へ */
+  top: 60%;    /* ←少し下へ */
   transform: translateY(-50%);
   text-align: center;
   z-index: 9999;
   pointer-events: none;
 }
 
+/* 指（斜めにしてケーキ方向へ） */
 #finger{
   font-size: 36px;
+  display: inline-block;
+  transform: rotate(-35deg); /* ←斜め */
   animation: floatFinger 1.6s ease-in-out infinite;
 }
 
 @keyframes floatFinger{
-  0%   { transform: translateY(0); }
-  50%  { transform: translateY(10px); }
-  100% { transform: translateY(0); }
+  0%   { transform: rotate(-35deg) translateY(0); }
+  50%  { transform: rotate(-35deg) translateY(10px); }
+  100% { transform: rotate(-35deg) translateY(0); }
 }
 
 #tapText{
@@ -186,10 +189,9 @@ html, body{
   <img src="girl3.png" id="resultImg">
 </div>
 
-<!-- カウント -->
 <div id="count"></div>
 
-<!-- ⭐ タップ誘導 -->
+<!-- タップ誘導 -->
 <div id="tapGuide">
   <div id="finger">👆</div>
   <div id="tapText">タップしてね</div>
@@ -234,7 +236,6 @@ function handleTap(){
   if(tap === 3){
     showCount("1", true);
 
-    // ⭐ 誘導UIを消す
     guide.style.opacity = "0";
     guide.style.transition = "opacity 0.6s ease";
 
